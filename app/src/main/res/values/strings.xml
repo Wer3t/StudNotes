@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">StudNotes</string>
+    <string name="empty">Empty</string>
+    <string name="add_note">Button to add note</string>
+    <string name="Title">Заголовок</string>
+    <string name="hintNote">Заметка</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="editTextOneLine">40dp</dimen>
+    <dimen name="paddingStartText">5dp</dimen>
+    <dimen name="imageSizeView">200dp</dimen>
+    <dimen name="imButtonSize">40dp</dimen>
+</resources>
