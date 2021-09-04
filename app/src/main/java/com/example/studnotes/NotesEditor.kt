@@ -2,13 +2,16 @@ package com.example.studnotes
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.example.studnotes.db.MyDbManager
+import com.example.studnotes.note.IntentConstants
 import kotlinx.android.synthetic.main.activity_notes_editor.*
 
 class NotesEditor : AppCompatActivity() {
@@ -19,11 +22,12 @@ class NotesEditor : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes_editor)
-
+        getIntents()
         fabAddPicture.setOnClickListener {
             imViewLayout.visibility = View.VISIBLE
-            val intent = Intent(Intent.ACTION_PICK)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.type = "image/*"
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             startActivityForResult(intent, imageRequestCode)
             fabAddPicture.visibility = View.GONE
         }
@@ -37,8 +41,9 @@ class NotesEditor : AppCompatActivity() {
         }
 
         ibEditImg.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.type = "image/*"
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             startActivityForResult(intent, imageRequestCode)
         }
 
@@ -49,6 +54,27 @@ class NotesEditor : AppCompatActivity() {
             if(subject != "" && title != "" && note != ""){
                 dbManager.insertToDb(subject, title, note, tempImgUri)
                 Toast.makeText(this, "Заметка сохранена!", Toast.LENGTH_LONG).show()
+            }
+            finish()
+        }
+    }
+
+    private fun getIntents(){
+        val i = intent
+        if(i != null){
+            if(i.getStringExtra(IntentConstants.SUBJECT_KEY) != null){
+                fabAddPicture.visibility = View.GONE
+
+                etSubject.setText(i.getStringExtra(IntentConstants.SUBJECT_KEY))
+                etTitle.setText(i.getStringExtra(IntentConstants.TITLE_KEY))
+                etNote.setText(i.getStringExtra(IntentConstants.NOTE_KEY))
+                if(i.getStringExtra(IntentConstants.IMAGE_URI_KEY) != "empty"){
+                    imViewLayout.visibility = View.VISIBLE
+                    ivMainImage.setImageURI(Uri.parse(i.getStringExtra(IntentConstants.IMAGE_URI_KEY)))
+                    ibEditImg.visibility = View.GONE
+                    ibDeleteImg.visibility = View.GONE
+                    fabSaveNote.visibility = View.GONE
+                }
             }
         }
     }
