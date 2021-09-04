@@ -4,4 +4,5 @@
     <string name="add_note">Button to add note</string>
     <string name="Title">Заголовок</string>
     <string name="hintNote">Заметка</string>
+    <string name="subject">Предмет</string>
 </resources>
