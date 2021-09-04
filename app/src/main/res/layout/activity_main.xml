@@ -10,7 +10,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray"
+        android:background="@color/middle_grey"
         tools:layout_editor_absoluteX="202dp"
         tools:layout_editor_absoluteY="133dp" />
 

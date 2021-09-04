@@ -4,4 +4,5 @@
     <dimen name="paddingStartText">5dp</dimen>
     <dimen name="imageSizeView">200dp</dimen>
     <dimen name="imButtonSize">40dp</dimen>
+    <dimen name="titleWidth">90dp</dimen>
 </resources>
