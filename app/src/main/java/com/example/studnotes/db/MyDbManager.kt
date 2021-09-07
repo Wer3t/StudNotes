@@ -3,6 +3,7 @@ package com.example.studnotes.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.provider.BaseColumns
 import android.provider.ContactsContract
 import com.example.studnotes.note.NoteData
 
@@ -29,6 +30,11 @@ class MyDbManager (val context: Context){
         db?.insert(UserNotes.TABLE_NAME, null, values)
     }
 
+    fun removeFromDb(id: String){
+        val selection = BaseColumns._ID + "=$id"
+        db?.delete(UserNotes.TABLE_NAME, selection , null)
+    }
+
     fun readData() : ArrayList<NoteData>{
         val dataList = ArrayList<NoteData>()
         val cursor = db?.query(UserNotes.TABLE_NAME, null, null, null, null, null, null)
@@ -38,6 +44,7 @@ class MyDbManager (val context: Context){
             noteData.title = cursor.getString(cursor.getColumnIndex(UserNotes.COLUMN_NAME_TITLE))
             noteData.note = cursor.getString(cursor.getColumnIndex(UserNotes.COLUMN_NAME_NOTE))
             noteData.imgUri = cursor.getString(cursor.getColumnIndex(UserNotes.COLUMN_NAME_IMAGE_URI))
+            noteData.id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
 
             dataList.add(noteData)
         }

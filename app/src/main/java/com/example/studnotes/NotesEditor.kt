@@ -64,6 +64,7 @@ class NotesEditor : AppCompatActivity() {
         if(i != null){
             if(i.getStringExtra(IntentConstants.SUBJECT_KEY) != null){
                 fabAddPicture.visibility = View.GONE
+                fabSaveNote.visibility = View.GONE
 
                 etSubject.setText(i.getStringExtra(IntentConstants.SUBJECT_KEY))
                 etTitle.setText(i.getStringExtra(IntentConstants.TITLE_KEY))
@@ -73,7 +74,6 @@ class NotesEditor : AppCompatActivity() {
                     ivMainImage.setImageURI(Uri.parse(i.getStringExtra(IntentConstants.IMAGE_URI_KEY)))
                     ibEditImg.visibility = View.GONE
                     ibDeleteImg.visibility = View.GONE
-                    fabSaveNote.visibility = View.GONE
                 }
             }
         }
@@ -94,6 +94,8 @@ class NotesEditor : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK && requestCode == imageRequestCode){
             ivMainImage.setImageURI(data?.data)
             tempImgUri = data?.data.toString()
+            this.contentResolver.takePersistableUriPermission (data?.data!!, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
+
     }
 }

@@ -5,4 +5,5 @@ object IntentConstants {
     const val TITLE_KEY = "title_key"
     const val NOTE_KEY = "note_key"
     const val IMAGE_URI_KEY = "imgUri_key"
+    const val ID = "id"
 }

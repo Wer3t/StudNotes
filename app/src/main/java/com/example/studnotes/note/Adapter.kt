@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studnotes.NotesEditor
 import com.example.studnotes.R
+import com.example.studnotes.db.MyDbManager
 
 
 class Adapter (mainList : ArrayList<NoteData>, contextMain: Context): RecyclerView.Adapter<Adapter.Holder>() {
@@ -33,6 +34,7 @@ class Adapter (mainList : ArrayList<NoteData>, contextMain: Context): RecyclerVi
                     putExtra(IntentConstants.TITLE_KEY, el.title)
                     putExtra(IntentConstants.NOTE_KEY, el.note)
                     putExtra(IntentConstants.IMAGE_URI_KEY, el.imgUri)
+                    putExtra(IntentConstants.ID, el.id)
                 }
                 context.startActivity(intent)
             }
@@ -56,6 +58,13 @@ class Adapter (mainList : ArrayList<NoteData>, contextMain: Context): RecyclerVi
         listArray.clear()
         listArray.addAll(listItems)
         notifyDataSetChanged()
+    }
+
+    fun deleteItem(position : Int, dbManager: MyDbManager){
+        dbManager.removeFromDb(listArray[position].id.toString())
+        listArray.removeAt(position)
+        notifyItemRangeChanged(0, listArray.size)
+        notifyItemRemoved(position)
     }
 
 }

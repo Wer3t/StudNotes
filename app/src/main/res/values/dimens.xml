@@ -5,5 +5,6 @@
     <dimen name="imageSizeView">200dp</dimen>
     <dimen name="imButtonSize">40dp</dimen>
     <dimen name="titleWidth">90dp</dimen>
-    <dimen name="textViewHeight">20dp</dimen>
+    <dimen name="textViewHeight">30dp</dimen>
+    <dimen name="deleteBtn">36dp</dimen>
 </resources>
