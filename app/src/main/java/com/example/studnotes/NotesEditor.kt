@@ -10,7 +10,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.core.net.toUri
 import com.example.studnotes.db.MyDbManager
 import com.example.studnotes.note.IntentConstants
 import kotlinx.android.synthetic.main.activity_notes_editor.*
@@ -25,6 +24,7 @@ class NotesEditor : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes_editor)
+        ivBigImage.visibility = View.GONE
         getIntents()
         fabAddPicture.setOnClickListener {
             imViewLayout.visibility = View.VISIBLE
@@ -65,6 +65,17 @@ class NotesEditor : AppCompatActivity() {
                 finish()
             }
         }
+
+        ivMainImage.setOnClickListener {
+            if(tempImgUri != "empty"){
+                ivBigImage.setImageURI(Uri.parse(tempImgUri))
+                ivBigImage.visibility = View.VISIBLE
+                Toast.makeText(this, "Нажмите ещё раз что бы закрыть", Toast.LENGTH_LONG).show()
+            }
+        }
+        ivBigImage.setOnClickListener {
+            ivBigImage.visibility = View.GONE
+        }
     }
 
     private fun getIntents(){
@@ -73,7 +84,7 @@ class NotesEditor : AppCompatActivity() {
             if(i.getStringExtra(IntentConstants.SUBJECT_KEY) != null){
                 id = i.getIntExtra(IntentConstants.ID, 0)
                 isEditState = true
-
+                tempImgUri = i.getStringExtra(IntentConstants.IMAGE_URI_KEY)!!
                 etSubject.setText(i.getStringExtra(IntentConstants.SUBJECT_KEY))
                 etTitle.setText(i.getStringExtra(IntentConstants.TITLE_KEY))
                 etNote.setText(i.getStringExtra(IntentConstants.NOTE_KEY))

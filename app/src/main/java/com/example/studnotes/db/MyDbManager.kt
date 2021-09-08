@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import android.provider.ContactsContract
 import com.example.studnotes.note.NoteData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MyDbManager (val context: Context){
     val myDbHelper = MyDbHelper(context)
@@ -35,7 +37,7 @@ class MyDbManager (val context: Context){
         db?.delete(UserNotes.TABLE_NAME, selection , null)
     }
 
-    fun readData(searchText: String) : ArrayList<NoteData>{
+    suspend fun readData(searchText: String) : ArrayList<NoteData> = withContext(Dispatchers.IO){
         val dataList = ArrayList<NoteData>()
         val selection = "${UserNotes.COLUMN_NAME_SUBJECT} like ?"
         val cursor = db?.query(UserNotes.TABLE_NAME, null, selection, arrayOf("%$searchText%"), null, null, null)
@@ -50,7 +52,7 @@ class MyDbManager (val context: Context){
             dataList.add(noteData)
         }
         cursor.close()
-        return dataList
+        return@withContext dataList
     }
 
     fun updateItem(id: Int, subject: String, title: String, note: String, imgUri: String){

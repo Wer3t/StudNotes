@@ -16,13 +16,18 @@ import com.example.studnotes.db.MyDbManager
 import com.example.studnotes.dialog.MyDialogFragment
 import com.example.studnotes.note.Adapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    val dbManager = MyDbManager(this)
-    val myAdapter = Adapter(ArrayList(), this)
-    val swapHelper = getSwapMg()
+    private val dbManager = MyDbManager(this)
+    private val myAdapter = Adapter(ArrayList(), this)
+    private val swapHelper = getSwapMg()
 
     private var isOkDelete = false
+    private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,21 +64,23 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val list = dbManager.readData(newText!!)
-                myAdapter.updateAdapter(list)
+                fillAdapter(newText!!)
                 return true
             }
 
         })
     }
 
-    private fun fillAdapter(){
-        val list = dbManager.readData("")
-        myAdapter.updateAdapter(list)
-        if(list.size > 0)
-            textView.visibility = View.GONE
-        else
-            textView.visibility = View.VISIBLE
+    private fun fillAdapter(text: String = ""){
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.Main).launch {
+            val list = dbManager.readData(text)
+            myAdapter.updateAdapter(list)
+            if(list.size > 0)
+                textView.visibility = View.GONE
+            else
+                textView.visibility = View.VISIBLE
+        }
     }
 
     private fun getSwapMg(): ItemTouchHelper{
