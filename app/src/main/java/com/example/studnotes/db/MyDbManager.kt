@@ -35,9 +35,10 @@ class MyDbManager (val context: Context){
         db?.delete(UserNotes.TABLE_NAME, selection , null)
     }
 
-    fun readData() : ArrayList<NoteData>{
+    fun readData(searchText: String) : ArrayList<NoteData>{
         val dataList = ArrayList<NoteData>()
-        val cursor = db?.query(UserNotes.TABLE_NAME, null, null, null, null, null, null)
+        val selection = "${UserNotes.COLUMN_NAME_SUBJECT} like ?"
+        val cursor = db?.query(UserNotes.TABLE_NAME, null, selection, arrayOf("%$searchText%"), null, null, null)
         while(cursor?.moveToNext()!!){
             val noteData : NoteData = NoteData()
             noteData.subject = cursor.getString(cursor.getColumnIndex(UserNotes.COLUMN_NAME_SUBJECT))
@@ -51,4 +52,17 @@ class MyDbManager (val context: Context){
         cursor.close()
         return dataList
     }
+
+    fun updateItem(id: Int, subject: String, title: String, note: String, imgUri: String){
+        val values = ContentValues().apply {
+            put(UserNotes.COLUMN_NAME_SUBJECT, subject)
+            put(UserNotes.COLUMN_NAME_TITLE, title)
+            put(UserNotes.COLUMN_NAME_NOTE, note)
+            put(UserNotes.COLUMN_NAME_IMAGE_URI, imgUri)
+        }
+        val selection = BaseColumns._ID + "=$id"
+
+        db?.update(UserNotes.TABLE_NAME, values, selection, null)
+    }
+
 }

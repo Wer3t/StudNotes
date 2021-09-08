@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+        initSearchView()
         fAB_add.setOnClickListener{
             val intent = Intent(this, NotesEditor::class.java)
             startActivity(intent)
@@ -50,8 +52,23 @@ class MainActivity : AppCompatActivity() {
         swapHelper.attachToRecyclerView(recyclerView)
     }
 
+    private fun initSearchView(){
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val list = dbManager.readData(newText!!)
+                myAdapter.updateAdapter(list)
+                return true
+            }
+
+        })
+    }
+
     private fun fillAdapter(){
-        val list = dbManager.readData()
+        val list = dbManager.readData("")
         myAdapter.updateAdapter(list)
         if(list.size > 0)
             textView.visibility = View.GONE
